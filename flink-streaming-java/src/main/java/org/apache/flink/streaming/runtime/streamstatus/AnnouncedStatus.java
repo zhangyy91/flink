@@ -30,6 +30,12 @@ import java.util.function.Consumer;
  */
 @Internal
 public final class AnnouncedStatus {
+    private static final AutoCloseable NO_OP =
+            new AutoCloseable() {
+                @Override
+                public void close() {}
+            };
+
     private StreamStatus currentStatus;
 
     public AnnouncedStatus(StreamStatus currentStatus) {
@@ -65,6 +71,6 @@ public final class AnnouncedStatus {
             statusConsumer.accept(StreamStatus.ACTIVE);
             return () -> statusConsumer.accept(StreamStatus.IDLE);
         }
-        return () -> {};
+        return NO_OP;
     }
 }
