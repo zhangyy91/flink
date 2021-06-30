@@ -94,8 +94,7 @@ public class TestStreamEnvironment extends StreamExecutionEnvironment {
                     if (STATE_CHANGE_LOG_CONFIG.equals(STATE_CHANGE_LOG_CONFIG_ON)) {
                         conf.set(CheckpointingOptions.ENABLE_STATE_CHANGE_LOG, true);
                     } else if (STATE_CHANGE_LOG_CONFIG.equals(STATE_CHANGE_LOG_CONFIG_RAND)) {
-                        randomize(conf, CheckpointingOptions.ENABLE_STATE_CHANGE_LOG,
-                                true, false);
+                        randomize(conf, CheckpointingOptions.ENABLE_STATE_CHANGE_LOG, true, false);
                     } else {
                         conf.set(CheckpointingOptions.ENABLE_STATE_CHANGE_LOG, false);
                     }
