@@ -90,7 +90,9 @@ public class TestStreamEnvironment extends StreamExecutionEnvironment {
                                 Duration.ofSeconds(2));
                     }
                     if (RANDOMIZE_STATE_CHANGE_LOG_CONFIG) {
-                        randomize(conf, CheckpointingOptions.ENABLE_STATE_CHANGE_LOG, true, false);
+                        conf.set(CheckpointingOptions.ENABLE_STATE_CHANGE_LOG, true);
+                        // randomize(conf, CheckpointingOptions.ENABLE_STATE_CHANGE_LOG, true,
+                        // false);
                     }
                     env.configure(conf, env.getUserClassloader());
                     return env;
