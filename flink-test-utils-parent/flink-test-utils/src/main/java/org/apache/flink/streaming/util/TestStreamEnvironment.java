@@ -35,11 +35,13 @@ import static org.apache.flink.runtime.testutils.PseudoRandomValueSelector.rando
 
 /** A {@link StreamExecutionEnvironment} that executes its jobs on {@link MiniCluster}. */
 public class TestStreamEnvironment extends StreamExecutionEnvironment {
+    private static final String STATE_CHANGE_LOG_CONFIG_ON = "on";
+    private static final String STATE_CHANGE_LOG_CONFIG_OFF = "off";
+    private static final String STATE_CHANGE_LOG_CONFIG_RAND = "random";
     private static final boolean RANDOMIZE_CHECKPOINTING_CONFIG =
             Boolean.parseBoolean(System.getProperty("checkpointing.randomization", "false"));
-    private static final boolean RANDOMIZE_STATE_CHANGE_LOG_CONFIG =
-            Boolean.parseBoolean(
-                    System.getProperty("checkpointing.changelog.randomization", "false"));
+    private static final String STATE_CHANGE_LOG_CONFIG =
+            System.getProperty("checkpointing.changelog", "off");
 
     public TestStreamEnvironment(
             MiniCluster miniCluster,
@@ -89,10 +91,13 @@ public class TestStreamEnvironment extends StreamExecutionEnvironment {
                                 Duration.ofMillis(100),
                                 Duration.ofSeconds(2));
                     }
-                    if (RANDOMIZE_STATE_CHANGE_LOG_CONFIG) {
+                    if (STATE_CHANGE_LOG_CONFIG.equals(STATE_CHANGE_LOG_CONFIG_ON)) {
                         conf.set(CheckpointingOptions.ENABLE_STATE_CHANGE_LOG, true);
-                        // randomize(conf, CheckpointingOptions.ENABLE_STATE_CHANGE_LOG, true,
-                        // false);
+                    } else if (STATE_CHANGE_LOG_CONFIG.equals(STATE_CHANGE_LOG_CONFIG_RAND)) {
+                        randomize(conf, CheckpointingOptions.ENABLE_STATE_CHANGE_LOG,
+                                true, false);
+                    } else {
+                        conf.set(CheckpointingOptions.ENABLE_STATE_CHANGE_LOG, false);
                     }
                     env.configure(conf, env.getUserClassloader());
                     return env;
