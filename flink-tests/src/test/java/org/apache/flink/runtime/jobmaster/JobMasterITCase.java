@@ -26,6 +26,9 @@ import org.apache.flink.api.connector.source.SourceReaderContext;
 import org.apache.flink.api.connector.source.SourceSplit;
 import org.apache.flink.api.connector.source.SplitEnumerator;
 import org.apache.flink.api.connector.source.SplitEnumeratorContext;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.configuration.JobManagerOptions;
+import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.core.io.SimpleVersionedSerializer;
 import org.apache.flink.runtime.jobgraph.JobGraph;
 import org.apache.flink.runtime.jobgraph.JobGraphTestUtils;
@@ -47,9 +50,14 @@ public class JobMasterITCase extends TestLogger {
 
     @Test
     public void testRejectionOfEmptyJobGraphs() throws Exception {
+        Configuration conf = new Configuration();
+        // set rest and rpc port to 0 to avoid clashes with concurrent MiniClusters
+        conf.setInteger(JobManagerOptions.PORT, 0);
+        conf.setString(RestOptions.BIND_PORT, "0");
         MiniCluster miniCluster =
                 new MiniCluster(
                         new MiniClusterConfiguration.Builder()
+                                .setConfiguration(conf)
                                 .setNumTaskManagers(1)
                                 .setNumSlotsPerTaskManager(1)
                                 .build());
