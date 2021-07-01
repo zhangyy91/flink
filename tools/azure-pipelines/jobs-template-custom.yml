@@ -88,6 +88,8 @@ jobs:
     matrix:
       tests:
         module: tests
+      finegrained_resource_management:
+        module: finegrained_resource_management
   steps:
   # if on Azure, free up disk space
   - script: ./tools/azure-pipelines/free_disk_space.sh
